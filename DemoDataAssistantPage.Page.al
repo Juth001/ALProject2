@@ -1,4 +1,4 @@
-page 50100 "Demo Data Assistant"
+page 50100 "Demo Data Assistant Page"
 {
     PageType = Card;
     ApplicationArea = All;
@@ -9,105 +9,180 @@ page 50100 "Demo Data Assistant"
     {
         area(Content)
         {
+            group(Configuration)
+            {
+                Caption = 'Configuración de Grupos de Registro';
+
+                group(BusinessPosting)
+                {
+                    Caption = 'Grupos de Negocio';
+
+                    field(GenBusPostingGroup; GenBusPostingGroup)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grupo Registro Negocio General';
+                        ToolTip = 'Especifica el grupo de registro de negocio general para clientes y proveedores';
+                        TableRelation = "Gen. Business Posting Group";
+                    }
+
+                    field(VATBusPostingGroup; VATBusPostingGroup)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grupo Registro IVA Negocio';
+                        ToolTip = 'Especifica el grupo de registro de IVA de negocio para clientes y proveedores';
+                        TableRelation = "VAT Business Posting Group";
+                    }
+
+                    field(CustPostingGroup; CustPostingGroup)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grupo Registro Clientes';
+                        ToolTip = 'Especifica el grupo de registro para clientes';
+                        TableRelation = "Customer Posting Group";
+                    }
+
+                    field(VendPostingGroup; VendPostingGroup)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grupo Registro Proveedores';
+                        ToolTip = 'Especifica el grupo de registro para proveedores';
+                        TableRelation = "Vendor Posting Group";
+                    }
+                }
+
+                group(ProductPosting)
+                {
+                    Caption = 'Grupos de Producto';
+
+                    field(GenProdPostingGroup; GenProdPostingGroup)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grupo Registro Producto General';
+                        ToolTip = 'Especifica el grupo de registro de producto general para productos';
+                        TableRelation = "Gen. Product Posting Group";
+                    }
+
+                    field(VATProdPostingGroup; VATProdPostingGroup)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grupo Registro IVA Producto';
+                        ToolTip = 'Especifica el grupo de registro de IVA de producto para productos';
+                        TableRelation = "VAT Product Posting Group";
+                    }
+
+                    field(InvPostingGroup; InvPostingGroup)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Grupo Registro Inventario';
+                        ToolTip = 'Especifica el grupo de registro de inventario para productos';
+                        TableRelation = "Inventory Posting Group";
+                    }
+                }
+
+                group(PaymentSettings)
+                {
+                    Caption = 'Configuración de Pago';
+
+                    field(PaymentTermsCode; PaymentTermsCode)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Código Condiciones Pago';
+                        ToolTip = 'Especifica el código de condiciones de pago';
+                        TableRelation = "Payment Terms";
+                    }
+
+                    field(PaymentMethodCode; PaymentMethodCode)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Código Forma Pago';
+                        ToolTip = 'Especifica el código de forma de pago';
+                        TableRelation = "Payment Method";
+                    }
+                }
+            }
+
             group(MasterData)
             {
                 Caption = 'Datos Maestros';
 
-                field(NumCustomers; NumCustomers)
+                field(NoOfCustomers; NoOfCustomers)
                 {
                     ApplicationArea = All;
                     Caption = 'Número de Clientes';
-                    MinValue = 0;
-                    MaxValue = 1000;
+                    ToolTip = 'Especifica cuántos clientes se crearán';
                 }
 
-                field(NumVendors; NumVendors)
+                field(NoOfVendors; NoOfVendors)
                 {
                     ApplicationArea = All;
                     Caption = 'Número de Proveedores';
-                    MinValue = 0;
-                    MaxValue = 1000;
+                    ToolTip = 'Especifica cuántos proveedores se crearán';
                 }
 
-                field(NumItems; NumItems)
+                field(NoOfItems; NoOfItems)
                 {
                     ApplicationArea = All;
                     Caption = 'Número de Productos';
-                    MinValue = 0;
-                    MaxValue = 1000;
+                    ToolTip = 'Especifica cuántos productos se crearán';
                 }
             }
 
-            group(SalesTransactions)
+            group(Transactions)
             {
-                Caption = 'Transacciones de Venta';
+                Caption = 'Transacciones';
 
-                field(NumSalesOrders; NumSalesOrders)
+                group(DateConfiguration)
                 {
-                    ApplicationArea = All;
-                    Caption = 'Pedidos de Venta';
-                    MinValue = 0;
-                    MaxValue = 1000;
+                    Caption = 'Configuración de Fechas';
+
+                    field(UseRandomDates; UseRandomDates)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Usar Fechas Aleatorias';
+                        ToolTip = 'Si está activado, los documentos tendrán fechas aleatorias entre hoy y 90 días atrás. Si está desactivado, se usará la fecha específica indicada abajo.';
+
+                        trigger OnValidate()
+                        begin
+                            SpecificPostingDateEditable := not UseRandomDates;
+                        end;
+                    }
+
+                    field(SpecificPostingDate; SpecificPostingDate)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'Fecha Específica de Registro';
+                        ToolTip = 'Fecha específica que se usará en todos los documentos (solo si "Usar Fechas Aleatorias" está desactivado)';
+                        Editable = SpecificPostingDateEditable;
+                    }
                 }
 
-                field(NumSalesShipments; NumSalesShipments)
+                field(NoOfSalesOrders; NoOfSalesOrders)
                 {
                     ApplicationArea = All;
-                    Caption = 'Albaranes de Venta';
-                    MinValue = 0;
-                    MaxValue = 1000;
+                    Caption = 'Número de Pedidos de Venta';
+                    ToolTip = 'Especifica cuántos pedidos de venta se crearán (se registrarán aleatoriamente)';
                 }
 
-                field(NumSalesInvoices; NumSalesInvoices)
+                field(NoOfPurchaseOrders; NoOfPurchaseOrders)
                 {
                     ApplicationArea = All;
-                    Caption = 'Facturas de Venta';
-                    MinValue = 0;
-                    MaxValue = 1000;
+                    Caption = 'Número de Pedidos de Compra';
+                    ToolTip = 'Especifica cuántos pedidos de compra se crearán (se registrarán aleatoriamente). Se generará automáticamente un número de documento del proveedor aleatorio.';
                 }
             }
 
-            group(PurchaseTransactions)
+            group(Information)
             {
-                Caption = 'Transacciones de Compra';
+                Caption = 'Información';
 
-                field(NumPurchaseOrders; NumPurchaseOrders)
+                field(InfoText; InfoText)
                 {
                     ApplicationArea = All;
-                    Caption = 'Pedidos de Compra';
-                    MinValue = 0;
-                    MaxValue = 1000;
-                }
-
-                field(NumPurchaseReceipts; NumPurchaseReceipts)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Albaranes de Compra';
-                    MinValue = 0;
-                    MaxValue = 1000;
-                }
-
-                field(NumPurchaseInvoices; NumPurchaseInvoices)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Facturas de Compra';
-                    MinValue = 0;
-                    MaxValue = 1000;
-                }
-            }
-
-            group(Progress)
-            {
-                Caption = 'Progreso';
-                Visible = ShowProgress;
-
-                field(ProgressText; ProgressText)
-                {
-                    ApplicationArea = All;
-                    Caption = 'Estado';
+                    Caption = '';
+                    MultiLine = true;
                     Editable = false;
-                    Style = Strong;
-                    StyleExpr = true;
+                    ShowCaption = false;
+                    Style = Subordinate;
                 }
             }
         }
@@ -117,155 +192,278 @@ page 50100 "Demo Data Assistant"
     {
         area(Processing)
         {
-            action(GenerateAll)
+            action(GenerateData)
             {
                 ApplicationArea = All;
-                Caption = 'Generar Todos los Datos';
-                Image = Start;
+                Caption = 'Generar Datos';
+                Image = CreateDocument;
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
+                ToolTip = 'Genera los datos de demostración según los parámetros especificados';
 
                 trigger OnAction()
+                var
+                    DemoDataAssistant: Codeunit "Demo Data Assistant";
                 begin
-                    if not Confirm('¿Está seguro de que desea generar datos de demostración?', false) then
+                    // Validar que se han introducido los campos obligatorios
+                    if GenBusPostingGroup = '' then
+                        Error('Debe especificar el Grupo Registro Negocio General');
+                    if VATBusPostingGroup = '' then
+                        Error('Debe especificar el Grupo Registro IVA Negocio');
+                    if CustPostingGroup = '' then
+                        Error('Debe especificar el Grupo Registro Clientes');
+                    if VendPostingGroup = '' then
+                        Error('Debe especificar el Grupo Registro Proveedores');
+                    if GenProdPostingGroup = '' then
+                        Error('Debe especificar el Grupo Registro Producto General');
+                    if VATProdPostingGroup = '' then
+                        Error('Debe especificar el Grupo Registro IVA Producto');
+                    if InvPostingGroup = '' then
+                        Error('Debe especificar el Grupo Registro Inventario');
+                    if PaymentTermsCode = '' then
+                        Error('Debe especificar el Código Condiciones Pago');
+                    if PaymentMethodCode = '' then
+                        Error('Debe especificar el Código Forma Pago');
+
+                    // Validar configuración de fechas
+                    if (not UseRandomDates) and (SpecificPostingDate = 0D) then
+                        Error('Debe especificar una Fecha Específica de Registro o activar Usar Fechas Aleatorias');
+
+                    if not Confirm('¿Desea generar los datos de demostración?', false) then
                         exit;
 
-                    ShowProgress := true;
-                    GenerateAllData();
-                    ShowProgress := false;
-                    Message('Generación de datos completada exitosamente.');
+                    DemoDataAssistant.GenerateRandomDataV2(
+                        NoOfCustomers,
+                        NoOfVendors,
+                        NoOfItems,
+                        NoOfSalesOrders,
+                        NoOfPurchaseOrders,
+                        GenBusPostingGroup,
+                        VATBusPostingGroup,
+                        CustPostingGroup,
+                        VendPostingGroup,
+                        PaymentTermsCode,
+                        PaymentMethodCode,
+                        GenProdPostingGroup,
+                        VATProdPostingGroup,
+                        InvPostingGroup,
+                        UseRandomDates,
+                        SpecificPostingDate
+                    );
+
+                    Message('Proceso completado. Revise los datos creados.');
                 end;
             }
 
-            action(GenerateMasterData)
+            action(DeleteDemoData)
             {
                 ApplicationArea = All;
-                Caption = 'Generar Solo Datos Maestros';
-                Image = ItemGroup;
+                Caption = 'Eliminar Datos DEMO';
+                Image = Delete;
                 Promoted = true;
                 PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Elimina todos los datos de demostración (DEMO-*) incluyendo clientes, proveedores, productos, contactos y documentos';
 
                 trigger OnAction()
+                var
+                    DemoDataAssistant: Codeunit "Demo Data Assistant";
                 begin
-                    ShowProgress := true;
-                    GenerateMasterDataOnly();
-                    ShowProgress := false;
-                    Message('Datos maestros generados exitosamente.');
+                    DemoDataAssistant.ClearDemoData();
                 end;
             }
 
-            action(GenerateTransactions)
+            action(ViewCustomers)
             {
                 ApplicationArea = All;
-                Caption = 'Generar Solo Transacciones';
+                Caption = 'Ver Clientes';
+                Image = Customer;
+                Promoted = true;
+                PromotedCategory = Category4;
+                ToolTip = 'Abre la lista de clientes';
+
+                trigger OnAction()
+                var
+                    Customer: Record Customer;
+                    CustomerList: Page "Customer List";
+                begin
+                    Customer.SetFilter("No.", 'DEMO-C*');
+                    CustomerList.SetTableView(Customer);
+                    CustomerList.Run();
+                end;
+            }
+
+            action(ViewVendors)
+            {
+                ApplicationArea = All;
+                Caption = 'Ver Proveedores';
+                Image = Vendor;
+                Promoted = true;
+                PromotedCategory = Category4;
+                ToolTip = 'Abre la lista de proveedores';
+
+                trigger OnAction()
+                var
+                    Vendor: Record Vendor;
+                    VendorList: Page "Vendor List";
+                begin
+                    Vendor.SetFilter("No.", 'DEMO-V*');
+                    VendorList.SetTableView(Vendor);
+                    VendorList.Run();
+                end;
+            }
+
+            action(ViewItems)
+            {
+                ApplicationArea = All;
+                Caption = 'Ver Productos';
+                Image = Item;
+                Promoted = true;
+                PromotedCategory = Category4;
+                ToolTip = 'Abre la lista de productos';
+
+                trigger OnAction()
+                var
+                    Item: Record Item;
+                    ItemList: Page "Item List";
+                begin
+                    Item.SetFilter("No.", 'DEMO-I*');
+                    ItemList.SetTableView(Item);
+                    ItemList.Run();
+                end;
+            }
+
+            action(ViewContacts)
+            {
+                ApplicationArea = All;
+                Caption = 'Ver Contactos (Personas)';
+                Image = ContactPerson;
+                Promoted = true;
+                PromotedCategory = Category4;
+                ToolTip = 'Abre la lista de personas de contacto generadas';
+
+                trigger OnAction()
+                var
+                    Contact: Record Contact;
+                    ContactList: Page "Contact List";
+                begin
+                    Contact.SetRange(Type, Contact.Type::Person);
+                    Contact.SetFilter("Company No.", '<>%1', '');
+                    ContactList.SetTableView(Contact);
+                    ContactList.Run();
+                end;
+            }
+
+            action(ViewSalesOrders)
+            {
+                ApplicationArea = All;
+                Caption = 'Ver Pedidos de Venta';
                 Image = Document;
                 Promoted = true;
-                PromotedCategory = Process;
+                PromotedCategory = Category5;
+                ToolTip = 'Abre la lista de pedidos de venta';
 
                 trigger OnAction()
+                var
+                    SalesHeader: Record "Sales Header";
+                    SalesOrderList: Page "Sales Order List";
                 begin
-                    ShowProgress := true;
-                    GenerateTransactionsOnly();
-                    ShowProgress := false;
-                    Message('Transacciones generadas exitosamente.');
+                    SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+                    SalesOrderList.SetTableView(SalesHeader);
+                    SalesOrderList.Run();
+                end;
+            }
+
+            action(ViewPurchaseOrders)
+            {
+                ApplicationArea = All;
+                Caption = 'Ver Pedidos de Compra';
+                Image = Document;
+                Promoted = true;
+                PromotedCategory = Category5;
+                ToolTip = 'Abre la lista de pedidos de compra';
+
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purchase Header";
+                    PurchaseOrderList: Page "Purchase Order List";
+                begin
+                    PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Order);
+                    PurchaseOrderList.SetTableView(PurchaseHeader);
+                    PurchaseOrderList.Run();
+                end;
+            }
+
+            action(ClearDemoData)
+            {
+                ApplicationArea = All;
+                Caption = 'Limpiar Datos Demo';
+                Image = Delete;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Elimina todos los datos de demostración creados';
+
+                trigger OnAction()
+                var
+                    DemoDataAssistant: Codeunit "Demo Data Assistant";
+                begin
+                    DemoDataAssistant.ClearDemoData();
                 end;
             }
         }
     }
 
-    var
-        NumCustomers: Integer;
-        NumVendors: Integer;
-        NumItems: Integer;
-        NumSalesOrders: Integer;
-        NumSalesShipments: Integer;
-        NumSalesInvoices: Integer;
-        NumPurchaseOrders: Integer;
-        NumPurchaseReceipts: Integer;
-        NumPurchaseInvoices: Integer;
-        ProgressText: Text;
-        ShowProgress: Boolean;
-        DemoDataMgt: Codeunit "Demo Data Management";
-
     trigger OnOpenPage()
     begin
-        // Valores por defecto
-        NumCustomers := 10;
-        NumVendors := 10;
-        NumItems := 20;
-        NumSalesOrders := 15;
-        NumSalesShipments := 10;
-        NumSalesInvoices := 10;
-        NumPurchaseOrders := 15;
-        NumPurchaseReceipts := 10;
-        NumPurchaseInvoices := 10;
-        ShowProgress := false;
+        // Valores por defecto para cantidades
+        NoOfCustomers := 10;
+        NoOfVendors := 5;
+        NoOfItems := 20;
+        NoOfSalesOrders := 15;
+        NoOfPurchaseOrders := 10;
+
+        // Valores por defecto para configuración (el usuario debe cambiarlos según su empresa)
+        GenBusPostingGroup := 'NAC';
+        VATBusPostingGroup := 'NAC';
+        CustPostingGroup := 'NAC';
+        VendPostingGroup := 'NAC';
+        PaymentTermsCode := '30 DÍAS';
+        PaymentMethodCode := 'CHEQUE';
+        GenProdPostingGroup := 'COMERCIAL';
+        VATProdPostingGroup := 'IVA21';
+        InvPostingGroup := 'COMERCIAL';
+
+        // Configuración de fechas por defecto
+        UseRandomDates := true;
+        SpecificPostingDate := Today;
+        SpecificPostingDateEditable := false;
+
+        InfoText := 'Este asistente crea datos de demostración para Business Central. ' +
+                    'Los datos maestros (clientes, proveedores y productos) se identifican con el prefijo "DEMO-". ' +
+                    'Las transacciones se crean automáticamente y algunas se registran de forma aleatoria. ' +
+                    'Los pedidos pueden convertirse en albaranes y facturas según la probabilidad configurada. ' +
+                    'IMPORTANTE: Revise y ajuste los grupos de registro antes de generar los datos. ' +
+                    'Los pedidos de compra incluirán números de documento de proveedor aleatorios.';
     end;
 
-    local procedure GenerateAllData()
-    begin
-        GenerateMasterDataOnly();
-        GenerateTransactionsOnly();
-    end;
-
-    local procedure GenerateMasterDataOnly()
-    begin
-        if NumCustomers > 0 then begin
-            ProgressText := 'Generando clientes...';
-            CurrPage.Update(false);
-            DemoDataMgt.GenerateCustomers(NumCustomers);
-        end;
-
-        if NumVendors > 0 then begin
-            ProgressText := 'Generando proveedores...';
-            CurrPage.Update(false);
-            DemoDataMgt.GenerateVendors(NumVendors);
-        end;
-
-        if NumItems > 0 then begin
-            ProgressText := 'Generando productos...';
-            CurrPage.Update(false);
-            DemoDataMgt.GenerateItems(NumItems);
-        end;
-    end;
-
-    local procedure GenerateTransactionsOnly()
-    begin
-        if NumSalesOrders > 0 then begin
-            ProgressText := 'Generando pedidos de venta...';
-            CurrPage.Update(false);
-            DemoDataMgt.GenerateSalesOrders(NumSalesOrders);
-        end;
-
-        if NumSalesShipments > 0 then begin
-            ProgressText := 'Generando albaranes de venta...';
-            CurrPage.Update(false);
-            DemoDataMgt.GenerateSalesShipments(NumSalesShipments);
-        end;
-
-        if NumSalesInvoices > 0 then begin
-            ProgressText := 'Generando facturas de venta...';
-            CurrPage.Update(false);
-            DemoDataMgt.GenerateSalesInvoices(NumSalesInvoices);
-        end;
-
-        if NumPurchaseOrders > 0 then begin
-            ProgressText := 'Generando pedidos de compra...';
-            CurrPage.Update(false);
-            DemoDataMgt.GeneratePurchaseOrders(NumPurchaseOrders);
-        end;
-
-        if NumPurchaseReceipts > 0 then begin
-            ProgressText := 'Generando albaranes de compra...';
-            CurrPage.Update(false);
-            DemoDataMgt.GeneratePurchaseReceipts(NumPurchaseReceipts);
-        end;
-
-        if NumPurchaseInvoices > 0 then begin
-            ProgressText := 'Generando facturas de compra...';
-            CurrPage.Update(false);
-            DemoDataMgt.GeneratePurchaseInvoices(NumPurchaseInvoices);
-        end;
-    end;
+    var
+        NoOfCustomers: Integer;
+        NoOfVendors: Integer;
+        NoOfItems: Integer;
+        NoOfSalesOrders: Integer;
+        NoOfPurchaseOrders: Integer;
+        GenBusPostingGroup: Code[20];
+        VATBusPostingGroup: Code[20];
+        CustPostingGroup: Code[20];
+        VendPostingGroup: Code[20];
+        PaymentTermsCode: Code[10];
+        PaymentMethodCode: Code[10];
+        GenProdPostingGroup: Code[20];
+        VATProdPostingGroup: Code[20];
+        InvPostingGroup: Code[20];
+        UseRandomDates: Boolean;
+        SpecificPostingDate: Date;
+        SpecificPostingDateEditable: Boolean;
+        InfoText: Text;
 }
