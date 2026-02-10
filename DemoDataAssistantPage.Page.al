@@ -256,24 +256,6 @@ page 50100 "Demo Data Assistant Page"
                 end;
             }
 
-            action(DeleteDemoData)
-            {
-                ApplicationArea = All;
-                Caption = 'Eliminar Datos DEMO';
-                Image = Delete;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                ToolTip = 'Elimina todos los datos de demostración (DEMO-*) incluyendo clientes, proveedores, productos, contactos y documentos';
-
-                trigger OnAction()
-                var
-                    DemoDataAssistant: Codeunit "Demo Data Assistant";
-                begin
-                    DemoDataAssistant.ClearDemoData();
-                end;
-            }
-
             action(ViewCustomers)
             {
                 ApplicationArea = All;
@@ -394,23 +376,6 @@ page 50100 "Demo Data Assistant Page"
                     PurchaseOrderList.Run();
                 end;
             }
-
-            action(ClearDemoData)
-            {
-                ApplicationArea = All;
-                Caption = 'Limpiar Datos Demo';
-                Image = Delete;
-                Promoted = true;
-                PromotedCategory = Process;
-                ToolTip = 'Elimina todos los datos de demostración creados';
-
-                trigger OnAction()
-                var
-                    DemoDataAssistant: Codeunit "Demo Data Assistant";
-                begin
-                    DemoDataAssistant.ClearDemoData();
-                end;
-            }
         }
     }
 
@@ -423,17 +388,6 @@ page 50100 "Demo Data Assistant Page"
         NoOfSalesOrders := 15;
         NoOfPurchaseOrders := 10;
 
-        // Valores por defecto para configuración (el usuario debe cambiarlos según su empresa)
-        GenBusPostingGroup := 'NAC';
-        VATBusPostingGroup := 'NAC';
-        CustPostingGroup := 'NAC';
-        VendPostingGroup := 'NAC';
-        PaymentTermsCode := '30 DÍAS';
-        PaymentMethodCode := 'CHEQUE';
-        GenProdPostingGroup := 'COMERCIAL';
-        VATProdPostingGroup := 'IVA21';
-        InvPostingGroup := 'COMERCIAL';
-
         // Configuración de fechas por defecto
         UseRandomDates := true;
         SpecificPostingDate := Today;
@@ -443,7 +397,7 @@ page 50100 "Demo Data Assistant Page"
                     'Los datos maestros (clientes, proveedores y productos) se identifican con el prefijo "DEMO-". ' +
                     'Las transacciones se crean automáticamente y algunas se registran de forma aleatoria. ' +
                     'Los pedidos pueden convertirse en albaranes y facturas según la probabilidad configurada. ' +
-                    'IMPORTANTE: Revise y ajuste los grupos de registro antes de generar los datos. ' +
+                    'IMPORTANTE: Configure los grupos de registro según su empresa antes de generar los datos. ' +
                     'Los pedidos de compra incluirán números de documento de proveedor aleatorios.';
     end;
 
